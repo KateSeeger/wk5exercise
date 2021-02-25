@@ -33,6 +33,7 @@ library(gganimate)     # for adding animation layers to ggplots
 library(transformr)    # for "tweening" (gganimate)
 library(gifski)        # need the library for creating gifs but don't need to load each time
 library(shiny)         # for creating interactive apps
+library(ggimage)
 theme_set(theme_minimal())
 ```
 
@@ -94,8 +95,6 @@ garden_harvest_ly <- garden_harvest %>%
        x= "",
        y = "")
 
-garden_harvest_ly
-
 ggplotly(garden_harvest_ly)
 ```
 
@@ -125,7 +124,6 @@ garden_harvest_facet <- garden_harvest %>%
              ncol = 2, 
              scales = "free_y")
 
-garden_harvest_facet
 
 ggplotly(garden_harvest_facet)
 ```
@@ -214,14 +212,22 @@ mallorca_map <- get_stamenmap(
     zoom = 11
 )
 
+bike <- "https://raw.githubusercontent.com/llendway/animation_and_interactivity/master/bike.png"
+
 bikemap <- ggmap(mallorca_map) +
   geom_path(data = mallorca_bike_day7, 
              aes(x = lon,
                  y = lat, 
                  color = ele),
              size = 2) +
+  geom_image(data = mallorca_bike_day7 %>%
+               mutate(image = bike),
+             aes(x = lon,
+                 y = lat, 
+                 image = image),
+             size = 0.062) +
   scale_color_viridis_c(option = "plasma" ) +
-  labs(title = "Path of Malloca Bike Ride", 
+  labs(title = "Path of Lisa's Malloca Bike Ride", 
        subtitle = "Time : {frame_along}", 
        x = "", 
        y = "") +

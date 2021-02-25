@@ -90,7 +90,9 @@ garden_harvest_ly <- garden_harvest %>%
   filter(vegetable == "lettuce") %>%
   ggplot(aes(x = weight)) + 
   geom_histogram(bins = 50) + 
-  labs(title = "Distribution of lettuce harvest in grams", x= "", y = "")
+  labs(title = "Distribution of lettuce harvest in grams", 
+       x= "",
+       y = "")
 
 garden_harvest_ly
 
@@ -100,17 +102,28 @@ ggplotly(garden_harvest_ly)
 ```{r}
 #Plot2
 garden_harvest_facet <- garden_harvest %>%
-  filter(vegetable %in% c("beets", "carrots", "potatoes", "radish", "onions", "rutabaga")) %>%
+  filter(vegetable %in% c("beets", 
+                          "carrots",
+                          "potatoes",
+                          "radish",
+                          "onions",
+                          "rutabaga")) %>%
   mutate(vegetable = str_to_title(vegetable), 
          variety = str_to_title(variety)) %>%
   mutate(wt_in_lbs = weight * 0.00220462) %>%
   group_by(date, vegetable, variety)%>%
   summarise(daily = sum(wt_in_lbs)) %>%
-  mutate(vegetable = fct_reorder(vegetable, daily, sum)) %>%
-  ggplot(aes(x= date, y= daily, color = variety)) +
+  mutate(vegetable = fct_reorder(vegetable, 
+                                 daily, 
+                                 sum)) %>%
+  ggplot(aes(x= date,
+             y= daily, 
+             color = variety)) +
   geom_line() +
   labs(title = "Yield of Root Vegetables from 2020 Summer Garden Harvest in lbs", x = "", y = "") +
-  facet_wrap(~vegetable, ncol = 2, scales = "free_y")
+  facet_wrap(~vegetable,
+             ncol = 2, 
+             scales = "free_y")
 
 garden_harvest_facet
 
@@ -125,7 +138,8 @@ small_trains %>%
   filter(departure_station == "REIMS") %>%
   group_by(month, year) %>%
   summarize(sumavg = sum(journey_time_avg)) %>%
-  ggplot(aes(x = month, y = sumavg)) + 
+  ggplot(aes(x = month,
+             y = sumavg)) + 
   geom_jitter() + 
   labs(title = "Total average journey time from REIMS to Parist EST by month", 
        x = "",  
@@ -159,11 +173,13 @@ garden_harvest %>%
   summarize(daily_harvest_lb = sum(weight)*0.00220462) %>% 
   ungroup() %>% 
   complete(variety, date, fill = list(daily_harvest_lb = 0)) %>%
-  #what I added
   group_by(variety) %>%
   mutate(cvariety = cumsum(daily_harvest_lb)) %>%
   ggplot(aes(date)) + 
   geom_area(aes(y = cvariety, fill = variety)) +
+  labs(title = "Cumulative harvest of tomato varieties over time",
+       x = "", 
+       y = "") +
   transition_reveal(date)
 
 ```
